@@ -73,12 +73,12 @@ class Discount extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         if($total->getDiscountDescription()) {
             // If a discount exists in cart and another discount is applied, the add both discounts.
     	    $discountAmount = -($total->getDiscountAmount()-$discountAmount);
-	        $label  	    = $total->getDiscountDescription().', '.$label;
+	    $label  	    = $total->getDiscountDescription().', '.$label;
     	} 
     	
     	$total->setDiscountDescription($label);
-	    $total->setDiscountAmount($discountAmount);
-	    $total->setBaseDiscountAmount($discountAmount);
+	$total->setDiscountAmount($discountAmount);
+	$total->setBaseDiscountAmount($discountAmount);
         $total->setSubtotalWithDiscount($total->getSubtotal() + $discountAmount);
         $total->setBaseSubtotalWithDiscount($total->getBaseSubtotal() + $discountAmount);
         $total->addTotalAmount($this->getCode(), $discountAmount);
