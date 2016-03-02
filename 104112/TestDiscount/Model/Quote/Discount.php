@@ -66,39 +66,30 @@ class Discount extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     ) {
         parent::collect($quote, $shippingAssignment, $total);
 
-       $amount = 10;
-
-        $address = $shippingAssignment->getShipping()->getAddress();
+        $address             = $shippingAssignment->getShipping()->getAddress();
+        $label               = 'My Custom Discount';
+        $discountAmount      = -10;   
+        $appliedCartDiscount = 0;
+        if($total->getDiscountDescription()) {
+            // If a discount exists in cart and another discount is applied, the add both discounts.
+            $appliedCartDiscount = $total->getDiscountAmount();
+    	    $discountAmount      = $total->getDiscountAmount()+$discountAmount;
+	    $label  	         = $total->getDiscountDescription().', '.$label;
+    	}    
+    	
+    	$total->setDiscountDescription($label);
+	$total->setDiscountAmount($discountAmount);
+	$total->setBaseDiscountAmount($discountAmount);
+        $total->setSubtotalWithDiscount($total->getSubtotal() + $discountAmount);
+        $total->setBaseSubtotalWithDiscount($total->getBaseSubtotal() + $discountAmount);
         
-        
-        /** Process shipping amount discount */
-/*
-        $address->setShippingDiscountAmount(0);
-        $address->setBaseShippingDiscountAmount(0);
-        if ($address->getShippingAmount()) {
-            $total->addTotalAmount($this->getCode(), -$amount);
-            $total->addBaseTotalAmount($this->getCode(), -$amount);
-        }
-
- 
-        $total->setDiscountDescription('Test Discount');
-        $total->setSubtotalWithDiscount($total->getSubtotal() + $total->getDiscountAmount());
-        $total->setBaseSubtotalWithDiscount($total->getBaseSubtotal() + $total->getBaseDiscountAmount());
-    */
-      
-       
-        $label          = 'My Custom Discount';
-        
-        $discountAmount = -10;              
-            $total->setDiscountDescription($label);
-            $total->setDiscountAmount($discountAmount);
-            $total->setBaseDiscountAmount($discountAmount);
-            $total->setSubtotalWithDiscount($total->getSubtotal() + $discountAmount);
-            $total->setBaseSubtotalWithDiscount($total->getBaseSubtotal() + $discountAmount);
-            
-            $total->addTotalAmount($this->getCode(), $discountAmount);
-        $total->addBaseTotalAmount($this->getCode(), $discountAmount);
-         
+       if(isset($appliedCartDiscount)) {
+	    $total->addTotalAmount($this->getCode(), $discountAmount - $appliedCartDiscount);
+	    $total->addBaseTotalAmount($this->getCode(), $discountAmount - $appliedCartDiscount);
+	} else {
+	    $total->addTotalAmount($this->getCode(), $discountAmount);
+	    $total->addBaseTotalAmount($this->getCode(), $discountAmount);
+	}
             
         return $this;
     }
