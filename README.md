@@ -1,7 +1,7 @@
 <a href="http://www.magepal.com" title="MagePal Extension Store" ><img src="https://image.ibb.co/dHBkYH/Magepal_logo.png" width="100" align="right" alt="Extension Store for Magento" /></a>
 
 # stackexchange
-Stackexchange question Module
+Magento Stackexchange question Modules
 
 ------
 
